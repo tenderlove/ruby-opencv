@@ -134,6 +134,18 @@ rb_class()
   return rb_klass;
 }
 
+static VALUE
+rb_copy_in_other(VALUE self, VALUE other)
+{
+  try {
+    cvResize(CVARR(other), CVARR(self));
+  }
+  catch (cv::Exception& e) {
+    raise_cverror(e);
+  }
+  return self;
+}
+
 void define_ruby_class()
 {
   if (rb_klass)
@@ -350,6 +362,7 @@ void define_ruby_class()
   rb_define_method(rb_klass, "rect_sub_pix", RUBY_METHOD_FUNC(rb_rect_sub_pix), -1);
   rb_define_method(rb_klass, "quadrangle_sub_pix", RUBY_METHOD_FUNC(rb_quadrangle_sub_pix), -1);
   rb_define_method(rb_klass, "resize", RUBY_METHOD_FUNC(rb_resize), -1);
+  rb_define_method(rb_klass, "copy_in", RUBY_METHOD_FUNC(rb_copy_in_other), 1);
   rb_define_method(rb_klass, "warp_affine", RUBY_METHOD_FUNC(rb_warp_affine), -1);
   rb_define_singleton_method(rb_klass, "rotation_matrix2D", RUBY_METHOD_FUNC(rb_rotation_matrix2D), 3);
   rb_define_singleton_method(rb_klass, "get_perspective_transform", RUBY_METHOD_FUNC(rb_get_perspective_transform), 2);
